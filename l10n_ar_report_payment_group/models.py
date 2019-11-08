@@ -7,4 +7,4 @@ class AccountPaymentGroup(models.Model):
     @api.multi
     def payment_print(self):
         for apg in self:
-            self.env.ref('l10n_ar_report_payment_group.report_payment_group').report_action(self,data=apg)
+            self.env['report'].get_action(self, 'l10n_ar_report_payment_group.report_payment_group')
