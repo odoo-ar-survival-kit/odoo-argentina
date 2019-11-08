@@ -6,5 +6,6 @@ class AccountPaymentGroup(models.Model):
 
     @api.multi
     def payment_print(self):
+        report = self.env['ir.actions.report']._get_report_from_name('l10n_ar_report_payment_group.report_payment_group')
         for apg in self:
-            self.env['report'].get_action(self, 'l10n_ar_report_payment_group.report_payment_group')
+            return report.report_action(docids=[apg.id])
