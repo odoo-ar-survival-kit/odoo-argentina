@@ -39,4 +39,11 @@ class account_invoice(models.Model):
 			inv.cae_barcode = str(inv.company_id.partner_id.main_id_number) + str(inv.journal_document_type_id.document_type_id.code) + \
 				str(inv.journal_id.point_of_sale_number) + str(inv.afip_auth_code or 0) + str(inv.afip_auth_code_due or 0).replace('-','')
 
+	def _get_report_base_filename(self):
+		self.ensure_one()
+		if (self.display_name):
+			return self.display_name.replace("/","")
+		else:
+			return "Factura Electronica"
+
 	cae_barcode = fields.Char('CAE Barcode',compute=_compute_cae_barcode)
