@@ -95,12 +95,17 @@ class AccountJournalDocumentType(models.Model):
 
         try:
             if afip_ws in ("wsfe", "wsmtxca"):
+                _logger.info(_("calling ws.CompUltimoAutorizado"))
                 last = ws.CompUltimoAutorizado(
                     document_type, self.journal_id.point_of_sale_number)
+                _logger.info(_("last: %s") % str(last) )
             elif afip_ws in ["wsfex", 'wsbfe']:
+                _logger.info(_("calling ws.GetLastCMP"))
                 last = ws.GetLastCMP(
                     document_type, self.journal_id.point_of_sale_number)
+                _logger.info(_("last: %s") % str(last) )
             else:
+                _logger.info(_('AFIP WS %s not implemented') % afip_ws)
                 return(_('AFIP WS %s not implemented') % afip_ws)
         except ValueError as error:
             _logger.warning('exception in get_pyafipws_last_invoice: %s' % (
