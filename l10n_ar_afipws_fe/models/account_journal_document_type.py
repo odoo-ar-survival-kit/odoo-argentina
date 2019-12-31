@@ -119,7 +119,8 @@ class AccountJournalDocumentType(models.Model):
                     ' proveedor de Odoo para mas información'))
 
         msg = " - ".join([ws.Excepcion, ws.ErrMsg, ws.Obs])
-
+        if (last==None):
+            last = 0
         next_ws = int(last or 0) + 1
         next_local = self.sequence_id.number_next_actual
         if next_ws != next_local:
