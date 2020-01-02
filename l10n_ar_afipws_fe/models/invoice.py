@@ -660,6 +660,8 @@ print "Observaciones:", wscdc.Obs
             if afip_ws != 'wsfe':
                 for line in inv.invoice_line_ids:
                     codigo = line.product_id.default_code
+                    if (line.product_id.codigo_ncm):                    
+                        codigo = line.product_id.codigo_ncm
                     # unidad de referencia del producto si se comercializa
                     # en una unidad distinta a la de consumo
                     if not line.uom_id.afip_code:
