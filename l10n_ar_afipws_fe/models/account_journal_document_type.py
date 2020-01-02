@@ -98,12 +98,12 @@ class AccountJournalDocumentType(models.Model):
                 _logger.info(_("calling ws.CompUltimoAutorizado"))
                 last = ws.CompUltimoAutorizado(
                     document_type, self.journal_id.point_of_sale_number)
-                _logger.info(_("last: %s") % str(last) )
+                _logger.info(_("last: %s, pdv: %s") % (str(last),str(self.journal_id.point_of_sale_number)) )
             elif afip_ws in ["wsfex", 'wsbfe']:
                 _logger.info(_("calling ws.GetLastCMP"))
                 last = ws.GetLastCMP(
                     document_type, self.journal_id.point_of_sale_number)
-                _logger.info(_("last: %s") % str(last) )
+                _logger.info(_("last: %s, pdv: %s") % (str(last),str(self.journal_id.point_of_sale_number)) )
             else:
                 _logger.info(_('AFIP WS %s not implemented') % afip_ws)
                 return(_('AFIP WS %s not implemented') % afip_ws)
