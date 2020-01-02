@@ -120,6 +120,7 @@ class AccountJournalDocumentType(models.Model):
 
         msg = " - ".join([ws.Excepcion, ws.ErrMsg, ws.Obs])
         if (last==None):
+            _logger.info(_("last is None! %s: pos: %s") % (str(last),str(self.journal_id.point_of_sale_number)) )
             last = 0
         next_ws = int(last or 0) + 1
         next_local = self.sequence_id.number_next_actual
