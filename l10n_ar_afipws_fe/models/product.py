@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
-	codigo_ncm = fields.Char('Codigo NCM')
+    codigo_ncm = fields.Char('Codigo NCM')
 
 
 
