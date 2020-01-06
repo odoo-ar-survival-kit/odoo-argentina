@@ -720,7 +720,7 @@ print "Observaciones:", wscdc.Obs
                     ws.AutorizarComprobante()
                     vto = ws.Vencimiento
                 elif afip_ws == 'wsfex':
-                    ws.Authorize(inv.id)
+                    ws.Authorize(inv.id*1000000)
                     vto = ws.FchVencCAE
                 elif afip_ws == 'wsbfe':
                     ws.Authorize(inv.id*1000000)
