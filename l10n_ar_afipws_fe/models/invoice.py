@@ -660,7 +660,7 @@ print "Observaciones:", wscdc.Obs
             if afip_ws != 'wsfe':
                 for line in inv.invoice_line_ids:
                     codigo = line.product_id.default_code
-                    if (line.product_id.codigo_ncm):                    
+                    if (line.product_id.codigo_ncm):
                         codigo = line.product_id.codigo_ncm
                     # unidad de referencia del producto si se comercializa
                     # en una unidad distinta a la de consumo
@@ -723,7 +723,7 @@ print "Observaciones:", wscdc.Obs
                     ws.Authorize(inv.id)
                     vto = ws.FchVencCAE
                 elif afip_ws == 'wsbfe':
-                    ws.Authorize(inv.id)
+                    ws.Authorize(inv.id*1000000)
                     vto = ws.Vencimiento
             except SoapFault as fault:
                 msg = 'Falla SOAP %s: %s' % (
