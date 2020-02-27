@@ -85,7 +85,7 @@ class L10nLatamDocumentType(models.Model):
         #document_type = invoice.l10n_latam_document_type_id.code
 
 
-        return self.get_pyafipws_last_invoice_by_code(invoice.journal_id)
+        return self.get_pyafipws_last_invoice_by_document_type(invoice.journal_id)
 
     def get_pyafipws_last_invoice_by_document_type(self,journal_id):
         self.ensure_one()

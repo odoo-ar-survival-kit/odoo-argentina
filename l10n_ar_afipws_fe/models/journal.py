@@ -88,7 +88,7 @@ class AccountJournal(models.Model):
 
             next_by_ws = int(
                 sequence.l10n_latam_document_type_id.get_pyafipws_last_invoice_by_document_type(
-                self)['result']) + 1
+                    self)['result']) + 1
             sequence.number_next_actual = next_by_ws
 
     def check_document_local_remote_number(self):
@@ -99,7 +99,7 @@ class AccountJournal(models.Model):
 
             next_by_ws = int(
                 sequence.l10n_latam_document_type_id.get_pyafipws_last_invoice_by_document_type(
-                self)['result']) + 1
+                    self)['result']) + 1
             next_by_seq = sequence.number_next_actual
             if next_by_ws != next_by_seq:
                 msg += _(
@@ -112,7 +112,6 @@ class AccountJournal(models.Model):
             raise UserError(msg)
         else:
             raise UserError(_('All documents are synchronized'))
-
 
     def test_pyafipws_dummy(self):
         """

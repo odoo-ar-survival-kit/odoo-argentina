@@ -4,7 +4,7 @@
 ##############################################################################
 from .pyi25 import PyI25
 from odoo import fields, models, api, _
-from odoo.exceptions import UserError,ValidationError
+from odoo.exceptions import UserError, ValidationError
 import base64
 from io import BytesIO
 import logging
@@ -83,18 +83,18 @@ class AccountMove(models.Model):
     afip_barcode = fields.Char(
         compute='_compute_barcode',
         string='AFIP Barcode',
-        #store=True
+        # store=True
     )
     # backport of v13 for qweb report
     l10n_ar_afip_barcode = fields.Char(
         compute='_compute_barcode',
         string='AFIP Barcode',
-        #store=True
+        # store=True
     )
     afip_barcode_img = fields.Binary(
         compute='_compute_barcode',
         string='AFIP Barcode Image',
-        #store=True
+        # store=True
     )
     afip_message = fields.Text(
         string='AFIP Message',
@@ -219,8 +219,10 @@ class AccountMove(models.Model):
                 ('company_id', '=', self.company_id.id),
                 ('document_number', '=', self.invoice_origin),
                 ('id', '!=', self.id),
-                ('l10n_latam_document_type_id.l10n_ar_letter', '=', self.l10n_latam_document_type_id.l10n_ar_letter),
-                ('l10n_latam_document_type_id', '!=', self.l10n_latam_document_type_id.id),
+                ('l10n_latam_document_type_id.l10n_ar_letter', '=',
+                 self.l10n_latam_document_type_id.l10n_ar_letter),
+                ('l10n_latam_document_type_id', '!=',
+                 self.l10n_latam_document_type_id.id),
                 ('state', 'not in', ['draft', 'cancel'])],
                 limit=1)
         else:
@@ -453,13 +455,13 @@ print "Observaciones:", wscdc.Obs
                         'Country: %s' % (
                             afip_ws, country.name)))
 
-            #ws_next_invoice_number = int(
+            # ws_next_invoice_number = int(
             #    inv.journal_document_type_id.get_pyafipws_last_invoice(
             #    )['result']) + 1
             ws_next_invoice_number = int(
                 inv.l10n_latam_document_type_id.get_pyafipws_last_invoice(inv)['result']) + 1
             # verify that the invoice is the next one to be registered in AFIP
-            #if inv.invoice_number != ws_next_invoice_number:
+            # if inv.invoice_number != ws_next_invoice_number:
             #    raise UserError(_(
             #        'Error!'
             #        'Invoice id: %i'
@@ -469,14 +471,17 @@ print "Observaciones:", wscdc.Obs
             #            inv.invoice_number)))
 
             partner_id_code = commercial_partner.l10n_latam_identification_type_id.l10n_ar_afip_code
-            tipo_doc = partner_id_code or '99'
             nro_doc = \
                 partner_id_code and commercial_partner.vat or "0"
+
+            tipo_doc = partner_id_code if nro_doc != "0" else '99'
+
             #cbt_desde = cbt_hasta = cbte_nro = inv.invoice_number
             cbt_desde = cbt_hasta = cbte_nro = ws_next_invoice_number
             concepto = tipo_expo = int(inv.l10n_ar_afip_concept)
 
             fecha_cbte = inv.invoice_date
+            _logger.info('afip_ws %r ' % afip_ws)
             if afip_ws != 'wsmtxca':
                 fecha_cbte = inv.invoice_date.strftime('%Y%m%d')
 
@@ -508,34 +513,52 @@ print "Observaciones:", wscdc.Obs
             # no se pasa iva. Probamos hacer que vat_taxable_amount
             # incorpore a los imp cod 0, pero en ese caso termina reportando
             # iva y no lo queremos
+            _logger.info(inv.l10n_latam_document_type_id.l10n_ar_letter)
+
             if inv.l10n_latam_document_type_id.l10n_ar_letter == 'C':
                 imp_neto = str("%.2f" % inv.amount_untaxed)
             else:
                 #imp_neto = str("%.2f" % inv.vat_taxable_amount)
                 imp_neto = str("%.2f" % inv.vat_taxable_amount)
+
             imp_iva = str("%.2f" % (inv.amount_total - inv.amount_untaxed))
             # se usaba para wsca..
             # imp_subtotal = str("%.2f" % inv.amount_untaxed)
             imp_trib = str("%.2f" % inv.other_taxes_amount)
             imp_op_ex = str("%.2f" % inv.vat_exempt_base_amount)
             moneda_id = inv.currency_id.l10n_ar_afip_code
-            moneda_ctz = round(1/inv.currency_id.rate,2)
+            moneda_ctz = round(1 / inv.currency_id.rate, 2)
             if not moneda_id:
-                raise ValidationError('No esta definido el codigo AFIP en la moneda')
-
+                raise ValidationError(
+                    'No esta definido el codigo AFIP en la moneda')
 
             CbteAsoc = inv.get_related_invoices_data()
 
             # create the invoice internally in the helper
             if afip_ws == 'wsfe':
                 inv.l10n_ar_currency_rate = moneda_ctz
+                _logger.info("""(
+                    concepto %r, tipo_doc %r, nro_doc %r, doc_afip_code %r, pos_number %r,
+                    cbt_desde %r, cbt_hasta %r, imp_total %r, imp_tot_conc %r, imp_neto %r,
+                    imp_iva %r,
+                    imp_trib %r, imp_op_ex %r, fecha_cbte %r, fecha_venc_pago %r,
+                    fecha_serv_desde %r, fecha_serv_hasta %r,
+                    moneda_id %r, round(moneda_ctz,2)%r
+                )""" % (
+                    concepto, tipo_doc, nro_doc, doc_afip_code, pos_number,
+                    cbt_desde, cbt_hasta, imp_total, imp_tot_conc, imp_neto,
+                    imp_iva,
+                    imp_trib, imp_op_ex, fecha_cbte, fecha_venc_pago,
+                    fecha_serv_desde, fecha_serv_hasta,
+                    moneda_id, round(moneda_ctz, 2)
+                ))
                 ws.CrearFactura(
                     concepto, tipo_doc, nro_doc, doc_afip_code, pos_number,
                     cbt_desde, cbt_hasta, imp_total, imp_tot_conc, imp_neto,
                     imp_iva,
                     imp_trib, imp_op_ex, fecha_cbte, fecha_venc_pago,
                     fecha_serv_desde, fecha_serv_hasta,
-                    moneda_id, round(moneda_ctz,2)
+                    moneda_id, round(moneda_ctz, 2)
                 )
             # elif afip_ws == 'wsmtxca':
             #     obs_generales = inv.comment
@@ -635,7 +658,8 @@ print "Observaciones:", wscdc.Obs
                     tipo_doc, nro_doc, zona, doc_afip_code, pos_number,
                     cbte_nro, fecha_cbte, imp_total, imp_neto, imp_iva,
                     imp_tot_conc, impto_liq_rni, imp_op_ex, imp_perc, imp_iibb,
-                    imp_perc_mun, imp_internos, moneda_id, round(moneda_ctz,2),
+                    imp_perc_mun, imp_internos, moneda_id, round(
+                        moneda_ctz, 2),
                     fecha_venc_pago
                 )
 
@@ -654,18 +678,19 @@ print "Observaciones:", wscdc.Obs
             # TODO ver si en realidad tenemos que usar un vat pero no lo
             # subimos
             if afip_ws not in ['wsfex', 'wsbfe']:
-                #for vat in inv.move_tax_ids:vat_taxable_ids:
+                # for vat in inv.move_tax_ids:vat_taxable_ids:
                 for vat in inv.move_tax_ids:
                     if vat.tax_id.tax_group_id.tax_type == 'vat' and vat.tax_id.tax_group_id.l10n_ar_vat_afip_code != '2':
-                            _logger.info('Adding VAT %s' % vat.tax_id.tax_group_id.name)
-                            ws.AgregarIva(
-                                vat.tax_id.tax_group_id.l10n_ar_vat_afip_code,
-                                "%.2f" % vat.base_amount,
-                                # "%.2f" % abs(vat.base_amount),
-                                "%.2f" % vat.tax_amount,
-                            )
+                        _logger.info('Adding VAT %s' %
+                                     vat.tax_id.tax_group_id.name)
+                        ws.AgregarIva(
+                            vat.tax_id.tax_group_id.l10n_ar_vat_afip_code,
+                            "%.2f" % vat.base_amount,
+                            # "%.2f" % abs(vat.base_amount),
+                            "%.2f" % vat.tax_amount,
+                        )
 
-                #for tax in inv.not_vat_tax_ids:
+                # for tax in inv.not_vat_tax_ids:
                 #    _logger.info(
                 #        'Adding TAX %s' % tax.tax_id.tax_group_id.name)
                 #    ws.AgregarTributo(
@@ -695,7 +720,8 @@ print "Observaciones:", wscdc.Obs
                         CbteAsoc.journal_id.l10n_ar_afip_pos_number,
                         CbteAsoc.document_number[5:],
                         self.company_id.vat,
-                        afip_ws != 'wsmtxca' and self.date.strftime('%Y%m%d') or self.date.strftime('%Y-%m-%d'),
+                        afip_ws != 'wsmtxca' and self.date.strftime(
+                            '%Y%m%d') or self.date.strftime('%Y-%m-%d'),
                     )
 
             # analize line items - invoice detail
@@ -786,7 +812,7 @@ print "Observaciones:", wscdc.Obs
                         sys.exc_type,
                         sys.exc_value)[0]
             if msg:
-                _logger.info(_('AFIP Validation Error. %s' % msg)+' XML Request: %s XML Response: %s' % (
+                _logger.info(_('AFIP Validation Error. %s' % msg) + ' XML Request: %s XML Response: %s' % (
                     ws.XmlRequest, ws.XmlResponse))
                 raise UserError(_('AFIP Validation Error. %s' % msg))
 
@@ -800,7 +826,7 @@ print "Observaciones:", wscdc.Obs
             if afip_ws == 'wsbfe':
                 vto = datetime.strftime(
                     datetime.strptime(vto, '%d/%m/%Y'), '%Y%m%d')
-            vto = vto[:4]+'-'+vto[4:6]+'-'+vto[6:8]
+            vto = vto[:4] + '-' + vto[4:6] + '-' + vto[6:8]
             inv.write({
                 'afip_auth_mode': 'CAE',
                 'afip_auth_code': ws.CAE,

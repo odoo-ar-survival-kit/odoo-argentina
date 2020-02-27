@@ -16,6 +16,7 @@
     'external_dependencies': {
     },
     'data': [
+        'data/tax_type.xml',
         'views/move_view.xml',
         'security/ir.model.access.csv',
     ],

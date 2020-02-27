@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="l10n_ar.tax_group_iva_27" model="account.tax.group">
+        <field name="tax_type">vat</field>
+    </record>
+    <record id="l10n_ar.tax_group_iva_21" model="account.tax.group">
+        <field name="tax_type">vat</field>
+    </record>
+    <record id="l10n_ar.tax_group_iva_105" model="account.tax.group">
+        <field name="tax_type">vat</field>
+    </record>
+    <record id="l10n_ar.tax_group_iva_025" model="account.tax.group">
+        <field name="tax_type">vat</field>
+    </record>
+</odoo>
