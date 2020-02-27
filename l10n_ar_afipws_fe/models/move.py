@@ -481,7 +481,6 @@ print "Observaciones:", wscdc.Obs
             concepto = tipo_expo = int(inv.l10n_ar_afip_concept)
 
             fecha_cbte = inv.invoice_date
-            _logger.info('afip_ws %r ' % afip_ws)
             if afip_ws != 'wsmtxca':
                 fecha_cbte = inv.invoice_date.strftime('%Y%m%d')
 
@@ -510,10 +509,9 @@ print "Observaciones:", wscdc.Obs
             imp_tot_conc = str("%.2f" % inv.vat_untaxed_base_amount)
             # imp_tot_conc = str("%.2f" % inv.amount_untaxed)
             # tal vez haya una mejor forma, la idea es que para facturas c
-            # no se pasa iva. Probamos hacer que vat_taxable_amount
+            # no se pasa iva. Probamosh acer que vat_taxable_amount
             # incorpore a los imp cod 0, pero en ese caso termina reportando
             # iva y no lo queremos
-            _logger.info(inv.l10n_latam_document_type_id.l10n_ar_letter)
 
             if inv.l10n_latam_document_type_id.l10n_ar_letter == 'C':
                 imp_neto = str("%.2f" % inv.amount_untaxed)
@@ -537,21 +535,6 @@ print "Observaciones:", wscdc.Obs
             # create the invoice internally in the helper
             if afip_ws == 'wsfe':
                 inv.l10n_ar_currency_rate = moneda_ctz
-                _logger.info("""(
-                    concepto %r, tipo_doc %r, nro_doc %r, doc_afip_code %r, pos_number %r,
-                    cbt_desde %r, cbt_hasta %r, imp_total %r, imp_tot_conc %r, imp_neto %r,
-                    imp_iva %r,
-                    imp_trib %r, imp_op_ex %r, fecha_cbte %r, fecha_venc_pago %r,
-                    fecha_serv_desde %r, fecha_serv_hasta %r,
-                    moneda_id %r, round(moneda_ctz,2)%r
-                )""" % (
-                    concepto, tipo_doc, nro_doc, doc_afip_code, pos_number,
-                    cbt_desde, cbt_hasta, imp_total, imp_tot_conc, imp_neto,
-                    imp_iva,
-                    imp_trib, imp_op_ex, fecha_cbte, fecha_venc_pago,
-                    fecha_serv_desde, fecha_serv_hasta,
-                    moneda_id, round(moneda_ctz, 2)
-                ))
                 ws.CrearFactura(
                     concepto, tipo_doc, nro_doc, doc_afip_code, pos_number,
                     cbt_desde, cbt_hasta, imp_total, imp_tot_conc, imp_neto,

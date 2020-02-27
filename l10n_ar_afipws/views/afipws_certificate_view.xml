@@ -51,4 +51,9 @@
             </tree>
         </field>
     </record>
+    <record id="action_afipws_certificate" model="ir.actions.act_window">
+        <field name="name">certificate</field>
+        <field name="res_model">afipws.certificate</field>
+        <field name="view_mode">tree,form</field>
+    </record>
 </odoo>

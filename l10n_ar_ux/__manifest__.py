@@ -1,6 +1,6 @@
 {
     "name": "l10n_ar_ux",
-    'version': '12.0.1.3.0',
+    'version': '13.0.1.3.0',
     'category': 'Localization/Argentina',
     'sequence': 14,
     'author': 'ADHOC SA, Moldeo Interactive,Odoo Community Association (OCA)',
