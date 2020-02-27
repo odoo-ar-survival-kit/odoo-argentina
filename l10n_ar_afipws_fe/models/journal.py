@@ -84,25 +84,27 @@ class AccountJournal(models.Model):
     def sync_document_local_remote_number(self):
         if self.type != 'sale':
             return True
-        for journal_document_type in self.journal_document_type_ids:
+        for sequence in self.l10n_ar_sequence_ids:
+
             next_by_ws = int(
-                journal_document_type.get_pyafipws_last_invoice(
-                )['result']) + 1
-            journal_document_type.sequence_id.number_next_actual = next_by_ws
+                sequence.l10n_latam_document_type_id.get_pyafipws_last_invoice_by_document_type(
+                self)['result']) + 1
+            sequence.number_next_actual = next_by_ws
 
     def check_document_local_remote_number(self):
         msg = ''
         if self.type != 'sale':
             return True
-        for journal_document_type in self.journal_document_type_ids:
+        for sequence in self.l10n_ar_sequence_ids:
+
             next_by_ws = int(
-                journal_document_type.get_pyafipws_last_invoice(
-                )['result']) + 1
-            next_by_seq = journal_document_type.sequence_id.number_next_actual
+                sequence.l10n_latam_document_type_id.get_pyafipws_last_invoice_by_document_type(
+                self)['result']) + 1
+            next_by_seq = sequence.number_next_actual
             if next_by_ws != next_by_seq:
                 msg += _(
                     '* Document Type %s, Local %i, Remote %i\n' % (
-                        journal_document_type.document_type_id.name,
+                        sequence.l10n_latam_document_type_id.name,
                         next_by_seq,
                         next_by_ws))
         if msg:
@@ -110,6 +112,7 @@ class AccountJournal(models.Model):
             raise UserError(msg)
         else:
             raise UserError(_('All documents are synchronized'))
+
 
     def test_pyafipws_dummy(self):
         """

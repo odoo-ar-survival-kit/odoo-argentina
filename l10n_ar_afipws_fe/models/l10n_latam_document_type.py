@@ -82,23 +82,30 @@ class L10nLatamDocumentType(models.Model):
         if not invoice:
             return('Problema de implementacion. No hay parametro definido')
         self.ensure_one()
-        document_type = invoice.l10n_latam_document_type_id.code
-        company = invoice.journal_id.company_id
-        afip_ws = invoice.journal_id.afip_ws
+        #document_type = invoice.l10n_latam_document_type_id.code
+
+
+        return self.get_pyafipws_last_invoice_by_code(invoice.journal_id)
+
+    def get_pyafipws_last_invoice_by_document_type(self,journal_id):
+        self.ensure_one()
+
+        company = journal_id.company_id
+        afip_ws = journal_id.afip_ws
 
         if not afip_ws:
             return (_('No AFIP WS selected on point of sale %s') % (
-                invoice.journal_id.name))
+                journal_id.name))
         ws = company.get_connection(afip_ws).connect()
         # call the webservice method to get the last invoice at AFIP:
 
         try:
             if afip_ws in ("wsfe", "wsmtxca"):
                 last = ws.CompUltimoAutorizado(
-                    document_type, invoice.journal_id.l10n_ar_afip_pos_number)
+                    self.code, journal_id.l10n_ar_afip_pos_number)
             elif afip_ws in ["wsfex", 'wsbfe']:
                 last = ws.GetLastCMP(
-                    document_type, invoice.journal_id.l10n_ar_afip_pos_number)
+                    self.code, journal_id.l10n_ar_afip_pos_number)
             else:
                 return(_('AFIP WS %s not implemented') % afip_ws)
         except ValueError as error:
@@ -115,7 +122,7 @@ class L10nLatamDocumentType(models.Model):
         msg = " - ".join([ws.Excepcion, ws.ErrMsg, ws.Obs])
 
         next_ws = int(last or 0) + 1
-        sequence = self.env['ir.sequence'].search([('l10n_latam_journal_id','=',invoice.journal_id.id),('l10n_latam_document_type_id','=',invoice.l10n_latam_document_type_id.id)])
+        sequence = self.env['ir.sequence'].search([('l10n_latam_journal_id','=',journal_id.id),('l10n_latam_document_type_id','=',self.id)])
         if not sequence or len(sequence) > 1:
             raise UserError('Problema de configuracion de secuencias')
         next_local = sequence.number_next_actual
