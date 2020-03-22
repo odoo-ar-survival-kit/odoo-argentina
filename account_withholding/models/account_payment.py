@@ -11,7 +11,7 @@ class AccountPayment(models.Model):
 
     tax_withholding_id = fields.Many2one(
         'account.tax',
-        string='Withholding Tax',
+        string='Impuesto de retencion',
         readonly=True,
         states={'draft': [('readonly', False)]},
     )
@@ -22,7 +22,7 @@ class AccountPayment(models.Model):
         "from a sequence that should be configured on the Withholding Tax"
     )
     withholding_base_amount = fields.Monetary(
-        string='Withholding Base Amount',
+        string='Monto base de retencion',
         readonly=True,
         states={'draft': [('readonly', False)]},
     )

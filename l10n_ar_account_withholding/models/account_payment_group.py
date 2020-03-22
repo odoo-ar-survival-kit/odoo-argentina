@@ -40,7 +40,6 @@ class AccountPaymentGroup(models.Model):
         compute='_company_regimenes_ganancias',
     )
 
-    @api.multi
     @api.depends('company_id.regimenes_ganancias_ids')
     def _company_regimenes_ganancias(self):
         """

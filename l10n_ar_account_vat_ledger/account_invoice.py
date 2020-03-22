@@ -33,7 +33,6 @@ class AccountInvoiceTax(models.Model):
         compute="_get_currency_values",
     )
 
-    @api.one
     @api.depends('currency_id')
     def _get_currency_values(self):
         # TODO si traer el rate de esta manera no resulta (por ej. porque
@@ -100,7 +99,6 @@ class AccountInvoice(models.Model):
         string='Company Cur. VAT Exempt Base Amount'
     )
 
-    @api.one
     @api.depends('currency_id')
     def _get_currency_values(self):
         # TODO si traer el rate de esta manera no resulta (por ej. porque

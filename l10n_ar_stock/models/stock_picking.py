@@ -29,7 +29,7 @@ class StockPicking(models.Model):
         help='Número de comprobante del último COT solicitado',
     )
 
-    @api.multi
+
     def get_arba_file_data(
             self, datetime_out, tipo_recorrido, carrier_partner,
             patente_vehiculo, patente_acomplado, prod_no_term_dev, importe):
@@ -357,7 +357,7 @@ class StockPicking(models.Model):
         #filename = 'TB_30712007288_001001_20190625_000031.txt'
         return (content, filename)
 
-    @api.multi
+    
     def do_pyafipws_presentar_remito(
             self, datetime_out, tipo_recorrido, carrier_partner,
             patente_vehiculo, patente_acomplado, prod_no_term_dev, importe):

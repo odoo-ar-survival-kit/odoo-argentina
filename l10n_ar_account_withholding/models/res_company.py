@@ -81,7 +81,6 @@ class ResCompany(models.Model):
                 '/SeguridadCliente/dfeServicioConsulta.do')
         return arba_login_url
 
-    @api.multi
     def arba_connect(self):
         """
         Method to be called

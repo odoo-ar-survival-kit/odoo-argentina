@@ -21,7 +21,6 @@ class AccountInvoiceTax(models.Model):
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    @api.multi
     def _compute_vat_ledger_ref(self):
         for inv in self:
             if inv.type in ['in_invoice','in_refund']:
@@ -30,7 +29,6 @@ class AccountInvoice(models.Model):
                         inv.vat_ledger_ref = line.account_id.name
 
 
-    @api.multi
     def _compute_cae_barcode(self):
         #company.partner_id.document_number,
         #o.journal_id.journal_class_id.afip_code,

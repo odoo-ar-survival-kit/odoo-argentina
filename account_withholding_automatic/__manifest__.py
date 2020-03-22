@@ -18,20 +18,23 @@
 #
 ##############################################################################
 {
+    'author': 'ADHOC SA',
     'license': 'AGPL-3',
     'category': 'Accounting & Finance',
     'data': [
         'views/account_tax_view.xml',
+        'views/account_payment_group_view.xml',
         'views/account_payment_view.xml',
-        'data/account_payment_method_data.xml',
+        'security/ir.model.access.csv',
+    ],
+    'demo': [
     ],
     'depends': [
-        'account',
-        # for payment method description and company_id field on form view
-        'l10n_ar',
+        'account_payment_group',
+        'account_withholding',
     ],
     'installable': True,
-    'name': 'Retenciones en pagos',
+    'name': 'Retenciones automaticas en pagos',
     'test': [],
-    'version': '13.0.1.0.0',
+    'version': '13.0.1.1.0',
 }

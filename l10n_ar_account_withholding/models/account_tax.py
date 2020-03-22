@@ -42,7 +42,6 @@ class AccountTax(models.Model):
                 ' utilizar esa misma etiqueta en las alícuotas configuradas en'
                 ' el partner. Revise los impuestos con id: %s') % recs.ids)
 
-    @api.multi
     def get_period_payments_domain(self, payment_group):
         previos_payment_groups_domain, previos_payments_domain = super(
             AccountTax, self).get_period_payments_domain(payment_group)
@@ -57,7 +56,6 @@ class AccountTax(models.Model):
             previos_payment_groups_domain,
             previos_payments_domain)
 
-    @api.multi
     def get_withholding_vals(self, payment_group):
         commercial_partner = payment_group.commercial_partner_id
 
@@ -141,14 +139,12 @@ class AccountTax(models.Model):
             vals['period_withholding_amount'] = amount
         return vals
 
-    @api.multi
     def get_partner_alicuota_percepcion(self, partner, date):
         if partner and date:
             arba = self.get_partner_alicuot(partner, date)
             return arba.alicuota_percepcion / 100.0
         return 0.0
 
-    @api.multi
     def get_partner_alicuot(self, partner, date):
         self.ensure_one()
         commercial_partner = partner.commercial_partner_id

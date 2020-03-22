@@ -20,7 +20,6 @@
 ##############################################################################
 {
     'author': 'ADHOC SA,Odoo Community Association (OCA)',
-    'website': 'www.adhoc.com.ar',
     'license': 'AGPL-3',
     'category': 'Accounting & Finance',
     'data': [
@@ -41,19 +40,13 @@
     ],
     'depends': [
         'account_withholding_automatic',
-        'l10n_ar_account',
-        # para ganancias
-        # deberiamos requerir l10n_ar_aeroo_base pero preferimos no hacerlo
-        # para no sumar dependencinas. Se deberia requerir porque el reporte
-        # usa las lineas
-        # 'l10n_ar_aeroo_base',
-        #'report_aeroo',
+        'l10n_ar',
     ],
     'external_dependencies': {
         'python': ['pyafipws'],
     },
     'installable': True,
-    'name': 'Automatic Argentinian Withholdings on Payments',
+    'name': 'Argentina - Retenciones automtaicas en pagos',
     'test': [],
     'version': '12.0.1.8.0',
 }

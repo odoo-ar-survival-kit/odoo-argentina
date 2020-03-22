@@ -17,7 +17,7 @@ class AccountInvoice(models.Model):
         'Rejected Check',
     )
 
-    @api.multi
+
     def action_cancel(self):
         """
         Si al cancelar la factura la misma estaba vinculada a un rechazo
@@ -35,7 +35,7 @@ class AccountInvoice(models.Model):
                 deferred_account_line.remove_move_reconcile()
         return super(AccountInvoice, self).action_cancel()
 
-    @api.multi
+    
     def action_move_create(self):
         """
         Si al validar la factura, la misma tiene un cheque de rechazo asociado

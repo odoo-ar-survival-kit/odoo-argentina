@@ -29,7 +29,6 @@ class ResPartner(models.Model):
         'Regimen Ganancias por Defecto',
     )
 
-    @api.multi
     def get_arba_alicuota_percepcion(self):
         company = self._context.get('invoice_company')
         date_invoice = self._context.get('date_invoice')
@@ -39,12 +38,10 @@ class ResPartner(models.Model):
             return arba.alicuota_percepcion / 100.0
         return 0
 
-    @api.multi
     def get_arba_alicuota_retencion(self, company, date):
         arba = self.get_arba_data(company, date)
         return arba.alicuota_retencion / 100.0
 
-    @api.multi
     def get_arba_data(self, company, date):
         self.ensure_one()
         from_date = (date + relativedelta(day=1)).strftime('%Y%m%d')

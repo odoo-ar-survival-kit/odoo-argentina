@@ -29,7 +29,7 @@ class AccountTax(models.Model):
     )
     withholding_sequence_id = fields.Many2one(
         'ir.sequence',
-        'Withholding Number Sequence',
+        'Secuencia de impuestos',
         domain=[('code', '=', 'account.tax.withholding')],
         context=(
             "{'default_code': 'account.tax.withholding',"

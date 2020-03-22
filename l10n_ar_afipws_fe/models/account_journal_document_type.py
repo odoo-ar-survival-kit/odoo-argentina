@@ -17,7 +17,7 @@ class AccountJournalDocumentType(models.Model):
         redaonly=True,
     )
 
-    @api.multi
+
     def get_pyafipws_consult_invoice(self, document_number):
         self.ensure_one()
         document_type = self.document_type_id.code
@@ -75,12 +75,12 @@ class AccountJournalDocumentType(models.Model):
         _logger.info('%s\n%s' % (title, msg))
         raise UserError(title + msg)
 
-    @api.multi
+
     def action_get_pyafipws_last_invoice(self):
         self.ensure_one()
         raise UserError(self.get_pyafipws_last_invoice()['msg'])
 
-    @api.multi
+    
     def get_pyafipws_last_invoice(self):
         self.ensure_one()
         document_type = self.document_type_id.code

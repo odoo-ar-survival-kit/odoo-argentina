@@ -5,7 +5,6 @@ from odoo import models, api, fields
 class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
-    @api.multi
     def _get_tax_factor(self):
         tax_factor = super(AccountInvoice, self)._get_tax_factor()
         doc_letter = self.document_type_id.document_letter_id.name
@@ -15,7 +14,6 @@ class AccountInvoice(models.Model):
             tax_factor = 1.0 / 1.21
         return tax_factor
 
-    @api.multi
     def get_taxes_values(self):
         """
         Hacemos esto para disponer de fecha de factura y cia para calcular
@@ -37,7 +35,6 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
 
-    @api.one
     def _compute_price(self):
         # ver nota en get_taxes_values
         invoice = self.invoice_id

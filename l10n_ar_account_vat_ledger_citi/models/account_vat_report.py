@@ -77,7 +77,6 @@ class account_vat_ledger(models.Model):
         'Rectificativa y su orden'
     )
 
-    @api.multi
     def format_amount(self, amount, padding=15, decimals=2, invoice=False):
         # get amounts on correct sign despite conifiguration on taxes and tax
         # codes
@@ -98,7 +97,6 @@ class account_vat_ledger(models.Model):
         return template.format(
             int(round(abs(amount) * 10**decimals, decimals)))
 
-    @api.multi
     @api.depends(
         'REGINFO_CV_CBTE',
         'REGINFO_CV_ALICUOTAS',
@@ -135,7 +133,6 @@ class account_vat_ledger(models.Model):
             self.vouchers_file = base64.encodestring(
                 self.REGINFO_CV_CBTE.encode('ISO-8859-1'))
 
-    @api.multi
     def compute_citi_data(self):
         alicuotas = self.get_REGINFO_CV_ALICUOTAS()
         # sacamos todas las lineas y las juntamos
@@ -180,14 +177,12 @@ class account_vat_ledger(models.Model):
         invoice.invalidate_cache()
         return "{:0>5d}".format(invoice.point_of_sale_number)
 
-    @api.multi
     def get_citi_invoices(self):
         self.ensure_one()
         return self.env['account.invoice'].search([
             ('document_type_id.export_to_citi', '=', True),
             ('id', 'in', self.invoice_ids.ids)], order='date_invoice asc')
 
-    @api.multi
     def get_REGINFO_CV_CBTE(self, alicuotas):
         self.ensure_one()
         res = []
@@ -419,7 +414,6 @@ class account_vat_ledger(models.Model):
             res.append(''.join(row))
         self.REGINFO_CV_CBTE = '\r\n'.join(res)
 
-    @api.multi
     def get_tax_row(self, invoice, base, code, tax_amount, impo=False):
         self.ensure_one()
         inv = invoice
@@ -487,7 +481,6 @@ class account_vat_ledger(models.Model):
             ]
         return row
 
-    @api.multi
     def get_REGINFO_CV_ALICUOTAS(self, impo=False):
         """
         Devolvemos un dict para calcular la cantidad de alicuotas cuando

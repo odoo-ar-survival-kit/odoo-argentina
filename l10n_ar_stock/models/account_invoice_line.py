@@ -16,12 +16,12 @@ class AccountInvoiceLine(models.Model):
         compute='_compute_lots',
     )
 
-    @api.multi
+
     def _compute_lots(self):
         for rec in self:
             rec.lot_ids = rec.move_line_ids.mapped('move_line_ids.lot_id')
 
-    @api.multi
+    
     @api.constrains('arba_code')
     def check_arba_code(self):
         for rec in self.filtered('arba_code'):

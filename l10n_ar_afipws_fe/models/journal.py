@@ -132,6 +132,19 @@ class AccountJournal(models.Model):
                 ws.AuthServerStatus))
         raise UserError(title + msg)
 
+    def test_pyafipws_taxes(self):
+        self.ensure_one()
+        afip_ws = self.afip_ws
+        if not afip_ws:
+            raise UserError(_('No AFIP WS selected'))
+        ws = self.company_id.get_connection(afip_ws).connect()
+        ret = ws.ParamGetTiposTributos(sep="")
+        msg = (_(" %s %s") % (
+            '. '.join(ret), " - ".join([ws.Excepcion, ws.ErrMsg, ws.Obs])))
+        title = _('Tributos en AFIP\n')
+        raise UserError(title + msg)
+
+
     def test_pyafipws_point_of_sales(self):
         self.ensure_one()
         afip_ws = self.afip_ws

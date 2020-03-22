@@ -123,7 +123,7 @@ class AccountInvoice(models.Model):
                         validation_type = False
                 rec.validation_type = validation_type
 
-    @api.multi
+
     @api.depends('afip_auth_code')
     def _compute_barcode(self):
         for rec in self:
@@ -179,7 +179,7 @@ class AccountInvoice(models.Model):
             digito = 0
         return str(digito)
 
-    @api.multi
+
     def get_related_invoices_data(self):
         """
         List related invoice information to fill CbtesAsoc.
@@ -202,7 +202,7 @@ class AccountInvoice(models.Model):
         else:
             return self.browse()
 
-    @api.multi
+
     def invoice_validate(self):
         """
         The last thing we do is request the cae because if an error occurs
@@ -213,7 +213,7 @@ class AccountInvoice(models.Model):
         self.do_pyafipws_request_cae()
         return res
 
-    @api.multi
+
     # para cuando se crea, por ej, desde ventas o contratos
     @api.constrains('partner_id')
     # para cuando se crea manualmente la factura
@@ -255,7 +255,7 @@ class AccountInvoice(models.Model):
             if journal:
                 rec.journal_id = journal.id
 
-    @api.multi
+
     def check_afip_auth_verify_required(self):
         for inv in self:
             if (
@@ -269,7 +269,7 @@ class AccountInvoice(models.Model):
                     'You can not validate invoice as AFIP authorization '
                     'verification is required'))
 
-    @api.multi
+
     def verify_on_afip(self):
         """
 cbte_modo = "CAE"                    # modalidad de emision: CAI, CAE,
@@ -370,7 +370,7 @@ print "Observaciones:", wscdc.Obs
                 'afip_auth_verify_observation': '%s%s' % (ws.Obs, ws.ErrMsg)
             })
 
-    @api.multi
+    
     def do_pyafipws_request_cae(self):
         "Request to AFIP the invoices' Authorization Electronic Code (CAE)"
         for inv in self:

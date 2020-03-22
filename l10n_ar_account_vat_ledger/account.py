@@ -41,7 +41,6 @@ class AcountDocumentType(models.Model):
         compute='_get_amounts'
     )
 
-    @api.one
     def _get_amounts(self):
         """
         """
@@ -98,7 +97,6 @@ class account_tax(models.Model):
         compute='_get_amounts',
     )
 
-    @api.one
     def _get_amounts(self):
         """
         """
@@ -172,7 +170,6 @@ class AfipResponsabilityType(models.Model):
         string=_('Total'),
         compute='_get_amounts',)
 
-    @api.one
     def _get_amounts(self):
         """
         """

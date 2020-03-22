@@ -510,25 +510,24 @@ print "Observaciones:", wscdc.Obs
             # imp_tot_conc = str("%.2f" % inv.amount_untaxed)
             # tal vez haya una mejor forma, la idea es que para facturas c
             # no se pasa iva. Probamosh acer que vat_taxable_amount
+            # no se pasa iva. Probamos hacer que vat_taxable_amount
             # incorpore a los imp cod 0, pero en ese caso termina reportando
             # iva y no lo queremos
-
             if inv.l10n_latam_document_type_id.l10n_ar_letter == 'C':
                 imp_neto = str("%.2f" % inv.amount_untaxed)
             else:
                 #imp_neto = str("%.2f" % inv.vat_taxable_amount)
                 imp_neto = str("%.2f" % inv.vat_taxable_amount)
-
-            imp_iva = str("%.2f" % (inv.amount_total - inv.amount_untaxed))
             # se usaba para wsca..
             # imp_subtotal = str("%.2f" % inv.amount_untaxed)
-            imp_trib = str("%.2f" % inv.other_taxes_amount)
             imp_op_ex = str("%.2f" % inv.vat_exempt_base_amount)
             moneda_id = inv.currency_id.l10n_ar_afip_code
             moneda_ctz = round(1 / inv.currency_id.rate, 2)
             if not moneda_id:
                 raise ValidationError(
                     'No esta definido el codigo AFIP en la moneda')
+                raise ValidationError('No esta definido el codigo AFIP en la moneda')
+
 
             CbteAsoc = inv.get_related_invoices_data()
 
@@ -543,6 +542,16 @@ print "Observaciones:", wscdc.Obs
                     fecha_serv_desde, fecha_serv_hasta,
                     moneda_id, round(moneda_ctz, 2)
                 )
+                if inv.other_taxes_amount > 0:
+                    for move_tax in inv.move_tax_ids:
+                        if move_tax.tax_id.tax_group_id.tax_type != 'vat':
+                            tributo_id = move_tax.tax_id.tax_group_id.l10n_ar_tribute_afip_code
+                            base_imp = move_tax.base_amount
+                            desc = move_tax.tax_id.name
+                            importe = move_tax.tax_amount
+                            alic = None
+                            ws.AgregarTributo(tributo_id, desc, base_imp, alic, importe)
+
             # elif afip_ws == 'wsmtxca':
             #     obs_generales = inv.comment
             #     ws.CrearFactura(
