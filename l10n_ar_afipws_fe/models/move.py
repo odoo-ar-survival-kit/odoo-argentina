@@ -518,7 +518,9 @@ print "Observaciones:", wscdc.Obs
             else:
                 #imp_neto = str("%.2f" % inv.vat_taxable_amount)
                 imp_neto = str("%.2f" % inv.vat_taxable_amount)
-            # se usaba para wsca..
+
+            imp_trib = str("%.2f" % inv.other_taxes_amount)
+            imp_iva = str("%.2f" % (inv.amount_total - (inv.amount_untaxed + inv.other_taxes_amount)))            # se usaba para wsca..
             # imp_subtotal = str("%.2f" % inv.amount_untaxed)
             imp_op_ex = str("%.2f" % inv.vat_exempt_base_amount)
             moneda_id = inv.currency_id.l10n_ar_afip_code

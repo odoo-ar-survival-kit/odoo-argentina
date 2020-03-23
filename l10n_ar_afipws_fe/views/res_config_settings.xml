@@ -9,25 +9,20 @@
 			<field name="arch" type="xml">
 				<xpath expr="//div[@id='invoicing_settings']" position="inside">
 					<div class="col-12 col-lg-6 o_setting_box">
-						<div class="o_setting_left_pane"></div>
-
-                                <div class="o_setting_right_pane">
-                                    
-                                    <span class="o_form_label">AFIP WS</span>
-
-                                    <div class="text-muted">
-                                        Configure AFIP web services
+						<div class="o_setting_left_pane"/>
+						<div class="o_setting_right_pane">
+							<span class="o_form_label">AFIP WS</span>
+							<div class="text-muted">Configure AFIP web services
                                     </div>
-                                    <div class="mt8">
-                                        <button name="%(l10n_ar_afipws.act_afipws_certificate_alias)d" icon="fa-arrow-right"
-                                                type="action" string="List certificates" class="btn-link"
-                                                />
-                                        <button name="%(l10n_ar_afipws.act_afipws_auth)d" icon="fa-arrow-right"
-                                                type="action" string="List conections" class="btn-link"
-                                                />                                                
-                                    </div>
-                                </div>
-
+							<div class="mt8">
+								<button class="btn-link" icon="fa-arrow-right" name="%(l10n_ar_afipws.act_afipws_certificate_alias)d" string="List certificates" type="action"/>
+								<button class="btn-link" icon="fa-arrow-right" name="%(l10n_ar_afipws.act_afipws_auth)d" string="List conections" type="action"/>
+							</div>
+							<div class="mt8">
+								<label for="afip_ws_env_type"/>
+                                <field name="afip_ws_env_type" class="font-weight-bold"/>
+							</div>
+						</div>
 					</div>
 				</xpath>
 			</field>
