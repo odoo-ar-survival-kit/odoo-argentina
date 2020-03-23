@@ -20,13 +20,12 @@ class ResCurrency(models.Model):
     @api.model
     def get_pyafipws_currencies(self, afip_ws='wsfex', company=False):
         # if not company, then we search one that uses argentinian localization
+        #if not company:
+        #    company = self.env['res.company'].search(
+        #        [('localization', '=', 'argentina')],
+        #        limit=1)
         if not company:
-            company = self.env['res.company'].search(
-                [('localization', '=', 'argentina')],
-                limit=1)
-        if not company:
-            raise UserError(_(
-                'No company found using argentinian localization'))
+            company = self.env['res.company'].search([],limit=1)
 
         ws = company.get_connection(afip_ws).connect()
 
@@ -59,7 +58,7 @@ class ResCurrency(models.Model):
             if not company:
                 return (False, _("There is not afipws certificates"))
 
-        if not self.afip_code:
+        if not self.l10n_ar_afip_code:
             raise UserError(_('No AFIP code for currency %s') % self.name)
 
         ws = company.get_connection(afip_ws).connect()
@@ -68,9 +67,10 @@ class ResCurrency(models.Model):
         # BFEGetPARAM_Ctz not found in WSDL
         # if afip_ws in ["wsfex", 'wsbfe']:
         if afip_ws == "wsfex":
-            rate = ws.GetParamCtz(self.afip_code)
+            rate = ws.GetParamCtz(self.l10n_ar_afip_code)
         elif afip_ws == "wsfe":
-            rate = ws.ParamGetCotizacion(self.afip_code)
+            rate = ws.ParamGetCotizacion(self.l10n_ar_afip_code)
+            # raise UserError('%s'%(rate))
         else:
             raise UserError(_('AFIP WS %s not implemented') % (
                 afip_ws))
