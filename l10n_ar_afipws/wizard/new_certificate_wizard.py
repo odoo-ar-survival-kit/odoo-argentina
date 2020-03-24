@@ -133,7 +133,7 @@ class L10nArAfipwsNewCertificate(models.TransientModel):
             self.state=STEPS[step+1][0]
     def prev_step(self):
         step = next((i for i,x in enumerate(STEPS) if self.state in x[0]),0)
-        if len(self.certificate_id == 0):
+        if len(self.certificate_id )== 0:
             min_state= 0
         elif self.certificate_id.state == 'draft':
             min_state= 2
@@ -168,7 +168,7 @@ class L10nArAfipwsNewCertificate(models.TransientModel):
         if 'state' in values and values['state']=='6_step':
             self.certificate_id.certificate_ids[0].write(
                 {'crt': base64.decodestring(self.certificate_file)})
-            #self.certificate_id.certificate_ids[0].action_confirm()
+            self.certificate_id.certificate_ids[0].action_confirm()
         if 'state' in values and values['state']=='end':
             pos_number = int(self.journal_code)
 
