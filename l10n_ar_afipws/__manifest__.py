@@ -15,6 +15,7 @@
     },
     'data': [
         'wizard/upload_certificate_view.xml',
+        'wizard/new_certificate_wizard.xml',
         'views/afipws_menuitem.xml',
         'views/afipws_certificate_view.xml',
         'views/afipws_certificate_alias_view.xml',

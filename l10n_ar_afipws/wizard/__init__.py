@@ -3,3 +3,4 @@
 # directory
 ##############################################################################
 from . import upload_certificate_wizard
+from . import new_certificate_wizard

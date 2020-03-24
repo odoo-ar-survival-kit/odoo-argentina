@@ -15,6 +15,8 @@
 							<div class="text-muted">Configure AFIP web services
                                     </div>
 							<div class="mt8">
+								<button class="btn-link" icon="fa-arrow-right" name="%(l10n_ar_afipws.action_new_certificate_wizard)d" string="New certificate" type="action"/>
+
 								<button class="btn-link" icon="fa-arrow-right" name="%(l10n_ar_afipws.act_afipws_certificate_alias)d" string="List certificates" type="action"/>
 								<button class="btn-link" icon="fa-arrow-right" name="%(l10n_ar_afipws.act_afipws_auth)d" string="List conections" type="action"/>
 							</div>

@@ -119,7 +119,7 @@ class AfipwsCertificate(models.Model):
             try:
                 certificate = crypto.load_certificate(
                     crypto.FILETYPE_PEM, self.crt.encode('ascii'))
-            except Exception as e:
+            except Exception as e:  
                 if 'Expecting: CERTIFICATE' in e[0]:
                     raise UserError(_(
                         'Wrong Certificate file format.\nBe sure you have '

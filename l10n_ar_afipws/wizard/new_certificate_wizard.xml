@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<record id="new_certificate_wizard_form" model="ir.ui.view">
+		<field name="name">new_certificate_wizard.form</field>
+		<field name="model">afipws.new_certificate.wizard</field>
+		<field name="arch" type="xml">
+			<form string="New certificate">
+				<header>
+					<field name="state" widget="statusbar"/>
+				</header>
+				<sheet>
+					<h2>
+						<field attrs="{'readonly':True}" name="certificate_id"/>
+					</h2>
+					<group attrs="{'invisible':[('state','!=','1_step')]}" string="Step 1">
+						<h3 colspan="2">Iniciar la creacion de un nuevo certificado
+						</h3>
+						<div colspan="2">Antes de iniciar esta guia va a necesitar:
+							
+							<ul>
+								<li>Elegir un plan de cuentas acorde a su posición fiscal.</li>
+								<li>Configurar  correctamente los datos fiscales de la compania.</li>
+								<li>Disponer de una clave fiscal de nivel 3 para realizar la configuración en AFIP</li>
+								<li>
+									Habilitar el 
+									<strong>servicio Administrador de Relaciones con clave fiscal</strong></li>
+								<li>Habilitar el 
+									<strong>Administración de Certificados Digitales</strong>
+									para certificados de producion
+									<br/>
+									o 
+									<strong>WSASS Autoservicio de Acceso a WebServices</strong>
+									para Homologación</li>
+								<li>Acceder al administrador de puntos de venta y domicilios en AFIP para crear un punto de venta</li>
+							</ul>
+							<p>No inicie la creacion del certificado comprobar esto</p>
+							<img alt="afip1" class="img img-responsive" src="/l10n_ar_afipws/static/src/img/afip1.gif"/>
+						</div>
+					</group>
+					<group attrs="{'invisible':[('state','!=','2_step')]}" string="Step 2">
+						<div>Para iniciar la creacion de un nuevo certificado deber primero decidir que tipo de certificado necesita:
+							<br/>
+							<strong>Homologacion </strong>
+							se utiliza para realizar pruebas sin valor fiscal. Y  
+							<strong>Produccion </strong>
+							para generar facturas con un CAE valido por las que debera Tributar.
+							<br/>
+							Es importante que comprenda que para una instancia de odoo debe elegir una opcion (no puede realizar facturas de homologacion y produccion al la vez) pero puede cambiar la configuración en el momento que necesite. Aunque debera realizar esta configuracion nuevamente, ya que los certificados no son compatible.</div>
+						<div>
+							<h3>Elija el tipo de ambiente y su compania </h3>
+							<span colspan="2">
+								<field name="env_type"/>
+							</span>
+							<span colspan="2">
+								<field name="company_id"/>
+							</span>
+						</div>
+					</group>
+					<group attrs="{'invisible':[('state','!=','3_step')]}" string="Step 3">
+						<h3 colspan="2">Datos del certificado</h3>
+						<group colspan="2">
+							<div>
+								<p>Si esta creando un certificado para facturar con su propio CUIT seleccion e
+									<strong>In House</strong>
+									. Si lo gestiona como representante seleccione para una tercera persona selecione
+									<strong>Outsourced</strong></p>
+								<field name="service_type" options="{'horizontal': true}" widget="radio"/>
+							</div>
+						</group>
+						<group colspan="2">
+							<group string="datos de quien factura">
+								<field name="country_id"/>
+								<field domain="[('country_id','=',country_id)]" name="state_id"/>
+								<field name="city"/>
+								<field attrs="{'invisible':[('service_type','!=','in_house')],'required':[('service_type','=','in_house')]}" name="company_cuit"/>
+							</group>
+							<group string="datos de quien Gestiona">
+								<field name="department"/>
+								<field attrs="{'invisible':[('service_type','!=','outsourced')],'required':[('service_type','=','outsourced')]}" name="service_provider_cuit"/>
+							</group>
+						</group>
+					</group>
+					<group attrs="{'invisible':[('state','!=','4_step')]}" string="Step 4">
+						<h3 colspan="2">Descargar la solicitud de certificado 
+						</h3>
+						<group>
+							<div>
+								<p>Descarge este archivo para poder solicitar en la pagina de AFIP su  certificado.</p>
+							</div>
+							<field invisible="1" name="request_filename"/>
+							<field filename="request_filename" name="request_file" readonly="True"/>
+						</group>
+						<group>
+							<p>Ingrese al area Administración de Certificados Digitales de la pagina de AFIP y agrege un alias. En el campo alias coloque 
+								
+								<strong>
+									<field name="common_name"/></strong>y suba el archivo aqui Proporcionado.
+								
+								<img alt="afip2" class="img img-responsive" src="/l10n_ar_afipws/static/src/img/afip2.gif"/></p>
+						</group>
+					</group>
+					<group attrs="{'invisible':[('state','!=','5_step')]}" string="Step 5">
+						<h3 colspan="2">Descague el certificado generado en afip
+						</h3>
+						<group>
+							<div>
+								<p>Descarge el archivo proporcionado desde la pagina de AFIP y subalo</p>
+								<field name="certificate_file"/>
+							</div>
+						</group>
+					</group>
+					<group attrs="{'invisible':[('state','!=','6_step')]}" string="Step 6">
+						<h3 colspan="2">¡Ya genero su certificado!
+						</h3>
+						<group>
+							<p>Ahora en la pagina de AFIP debe crear un punto de venta y relacionarlo con su WS [GIF de afip]</p>
+						</group>
+						<group>
+							<p colspan="2">Escriba aqui el numero de punto de venta que creo en AFIP</p>
+							<field attrs="{'required':[('state','=','6_step')]}" name="journal_code"/>
+							<p colspan="2">Seleccione el tipo de WS. Si no conoce diferencia deje la opción sugerida.</p>
+							<field name="afip_ws"/>
+						</group>
+					</group>
+					<group attrs="{'invisible':[('state','!=','end')]}" string="Fin">
+						<h3 colspan="2">Ya puede comenzar a Facturar
+						</h3>
+						<div style="font-size:4em;">:)</div>
+					</group>
+					<group>
+						<button attrs="{'invisible':[('state','in',['end','1_step'])]}" name="prev_step" string="Volver" type="object"/>
+						<button attrs="{'invisible':[('state','=','end')]}" name="next_step" string="Siguiente" type="object"/>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	<record id="action_new_certificate_wizard" model="ir.actions.act_window">
+		<field name="name">new certificate wizard</field>
+		<field name="res_model">afipws.new_certificate.wizard</field>
+		<field name="view_mode">form</field>
+		<field name="target">current</field>
+	</record>
+</odoo>
