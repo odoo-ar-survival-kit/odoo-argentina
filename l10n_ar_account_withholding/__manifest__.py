@@ -25,17 +25,18 @@
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',
-        'reports/certificado_de_retencion_report.xml',
+        # 'reports/certificado_de_retencion_report.xml',
         'views/account_payment_group_view.xml',
         'views/res_company_view.xml',
         'views/afip_tabla_ganancias_escala_view.xml',
         'views/afip_tabla_ganancias_alicuotasymontos_view.xml',
         'views/account_payment_view.xml',
         'views/res_partner_view.xml',
+        'views/afip_activity_view.xml',
         'data/tabla_ganancias_data.xml',
     ],
     'demo': [
-        'demo/ir_parameter.xml',
+        # 'demo/ir_parameter.xml',
         # 'demo/demo.xml',
     ],
     'depends': [

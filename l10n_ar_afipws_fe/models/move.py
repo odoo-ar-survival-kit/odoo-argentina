@@ -403,9 +403,12 @@ print "Observaciones:", wscdc.Obs
             if inv.afip_auth_code:
                 continue
 
-            if inv.journal_id.l10n_ar_afip_pos_system != 'RLI_RLM':
+            if inv.journal_id.l10n_ar_afip_pos_system not in ['RLI_RLM','FEERCEL']:
                 continue
-            afip_ws = inv.journal_id.afip_ws
+            if inv.journal_id.l10n_ar_afip_pos_system != 'FEERCEL':
+                afip_ws = inv.journal_id.afip_ws
+            else:
+                afip_ws = 'wsfex'
             # Ignore invoice if not ws on point of sale
             if not afip_ws:
                 raise UserError(_(
@@ -415,7 +418,7 @@ print "Observaciones:", wscdc.Obs
             # if no validation type and we are on electronic invoice, it means
             # that we are on a testing database without homologation
             # certificates
-            if not inv.validation_type:
+            if not inv.validation_type and afip_ws != 'wsfex':
                 msg = (
                     'Factura validada solo localmente por estar en ambiente '
                     'de homologación sin claves de homologación')
@@ -449,13 +452,12 @@ print "Observaciones:", wscdc.Obs
                         'For WS "%s" country code is mandatory'
                         'Country: %s' % (
                             afip_ws, country.name)))
-                elif not country.afip_code:
+                elif not country.l10n_ar_afip_code:
                     raise UserError(_(
                         'For WS "%s" country afip code is mandatory'
                         'Country: %s' % (
                             afip_ws, country.name)))
-
-            # ws_next_invoice_number = int(
+            #ws_next_invoice_number = int(
             #    inv.journal_document_type_id.get_pyafipws_last_invoice(
             #    )['result']) + 1
             ws_next_invoice_number = int(
@@ -567,9 +569,9 @@ print "Observaciones:", wscdc.Obs
             #     )
             elif afip_ws == 'wsfex':
                 # # foreign trade data: export permit, country code, etc.:
-                if inv.incoterm_id:
-                    incoterms = inv.incoterm_id.afip_code
-                    incoterms_ds = inv.incoterm_id.name
+                if inv.invoice_incoterm_id:
+                    incoterms = inv.invoice_incoterm_id.code
+                    incoterms_ds = inv.invoice_incoterm_id.name
                     # máximo de 20 caracteres admite
                     incoterms_ds = incoterms_ds and incoterms_ds[:20]
                 else:
@@ -582,7 +584,7 @@ print "Observaciones:", wscdc.Obs
                     permiso_existente = "N"
                 else:
                     permiso_existente = ""
-                obs_generales = inv.comment
+                obs_generales = inv.narration
 
                 if inv.invoice_payment_term_id:
                     forma_pago = inv.invoice_payment_term_id.name
@@ -618,7 +620,7 @@ print "Observaciones:", wscdc.Obs
                     commercial_partner.zip or '',
                     commercial_partner.city or '',
                 ])
-                pais_dst_cmp = commercial_partner.country_id.afip_code
+                pais_dst_cmp = commercial_partner.country_id.l10n_ar_afip_code
                 ws.CrearFactura(
                     doc_afip_code, pos_number, cbte_nro, fecha_cbte,
                     imp_total, tipo_expo, permiso_existente, pais_dst_cmp,
@@ -726,14 +728,14 @@ print "Observaciones:", wscdc.Obs
                     # unidad de referencia del producto si se comercializa
                     # en una unidad distinta a la de consumo
                     # uom is not mandatory, if no UOM we use "unit"
-                    if not line.uom_id:
+                    if not line.product_uom_id:
                         umed = '7'
-                    elif not line.uom_id.afip_code:
+                    elif not line.product_uom_id.l10n_ar_afip_code:
                         raise UserError(_(
                             'Not afip code con producto UOM %s' % (
-                                line.uom_id.name)))
+                                line.product_uom_id.name)))
                     else:
-                        umed = line.uom_id.afip_code
+                        umed = line.product_uom_id.l10n_ar_afip_code
                     # cod_mtx = line.uom_id.afip_code
                     ds = line.name
                     qty = line.quantity

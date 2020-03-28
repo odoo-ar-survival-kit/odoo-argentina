@@ -40,7 +40,7 @@ class AccountPaymentGroup(models.Model):
         compute='_company_regimenes_ganancias',
     )
 
-    @api.depends('company_id.regimenes_ganancias_ids')
+    #@api.depends('company_id.regimenes_ganancias_ids')
     def _company_regimenes_ganancias(self):
         """
         Lo hacemos con campo computado y no related para que solo se setee

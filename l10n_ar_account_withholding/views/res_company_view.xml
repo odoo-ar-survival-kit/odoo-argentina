@@ -11,13 +11,13 @@
                     <field name="regimenes_ganancias_ids" widget="many2many_tags"/>
                 <!-- /group -->
 		</field>
-                <notebook>
+                <!-- notebook>
                     <page string="ARBA WS" name="arbaws">
                         <group>
                             <field name="arba_cit"/>
                         </group>
                     </page>
-                </notebook>
+                </notebook -->
             </field>
         </record>
     </data>

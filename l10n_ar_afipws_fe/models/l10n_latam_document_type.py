@@ -82,6 +82,12 @@ class L10nLatamDocumentType(models.Model):
         if not invoice:
             return('Problema de implementacion. No hay parametro definido')
         self.ensure_one()
+        document_type = invoice.l10n_latam_document_type_id.code
+        company = invoice.journal_id.company_id
+        if invoice.journal_id.l10n_ar_afip_pos_system != 'FEERCEL':
+            afip_ws = invoice.journal_id.afip_ws
+        else:
+            afip_ws = 'wsfex'
         #document_type = invoice.l10n_latam_document_type_id.code
 
 
@@ -91,7 +97,10 @@ class L10nLatamDocumentType(models.Model):
         self.ensure_one()
 
         company = journal_id.company_id
-        afip_ws = journal_id.afip_ws
+		if journal_id.l10n_ar_afip_pos_system != 'FEERCEL':
+            afip_ws = journal_id.afip_ws
+        else:
+            afip_ws = 'wsfex'
 
         if not afip_ws:
             return (_('No AFIP WS selected on point of sale %s') % (

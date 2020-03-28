@@ -119,7 +119,10 @@ class AccountJournal(models.Model):
         infraestructura (FEDummy)
         """
         self.ensure_one()
-        afip_ws = self.afip_ws
+        if self.l10n_ar_afip_pos_system != 'FEERCEL':
+            afip_ws = self.afip_ws
+        else:
+            afip_ws = 'wsfex'
         if not afip_ws:
             raise UserError(_('No AFIP WS selected'))
         ws = self.company_id.get_connection(afip_ws).connect()

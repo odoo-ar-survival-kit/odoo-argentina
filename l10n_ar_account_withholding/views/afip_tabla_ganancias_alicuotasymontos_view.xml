@@ -35,11 +35,11 @@
             <field name="name">AFIP tax</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">afip.tabla_ganancias.alicuotasymontos</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="Alicuotas y Montos Ganancias" action="act_afip_tabla_ganancias_alicuotasymontos" id="menu_action_afip_tabla_ganancias_alicuotasymontos" sequence="95" parent="l10n_ar_account.menu_afip_config"/>
+	<menuitem name="Alicuotas y Montos Ganancias" action="act_afip_tabla_ganancias_alicuotasymontos" id="menu_action_afip_tabla_ganancias_alicuotasymontos"
+	       	sequence="95" parent="l10n_ar.menu_afip_config"/>
 
     </data>
 </openerp>
