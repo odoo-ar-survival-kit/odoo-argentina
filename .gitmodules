@@ -1,0 +1,3 @@
+[submodule "boton_mercadopago"]
+	path = boton_mercadopago
+	url = git@github.com:filoquin/boton_mercadopago.git
