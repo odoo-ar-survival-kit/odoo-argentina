@@ -82,13 +82,6 @@ class L10nLatamDocumentType(models.Model):
         if not invoice:
             return('Problema de implementacion. No hay parametro definido')
         self.ensure_one()
-        document_type = invoice.l10n_latam_document_type_id.code
-        company = invoice.journal_id.company_id
-        if invoice.journal_id.l10n_ar_afip_pos_system != 'FEERCEL':
-            afip_ws = invoice.journal_id.afip_ws
-        else:
-            afip_ws = 'wsfex'
-        #document_type = invoice.l10n_latam_document_type_id.code
 
 
         return self.get_pyafipws_last_invoice_by_document_type(invoice.journal_id)
@@ -97,7 +90,7 @@ class L10nLatamDocumentType(models.Model):
         self.ensure_one()
 
         company = journal_id.company_id
-		if journal_id.l10n_ar_afip_pos_system != 'FEERCEL':
+        if journal_id.l10n_ar_afip_pos_system != 'FEERCEL':
             afip_ws = journal_id.afip_ws
         else:
             afip_ws = 'wsfex'
