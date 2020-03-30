@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-from odoo import api,  models, _
+from odoo import api, fields , models, _
 from odoo.exceptions import  UserError
 
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
-
     @api.model
     def _get_default_journal(self):
         ''' Get the default journal.
@@ -30,18 +32,26 @@ class AccountMove(models.Model):
             domain = [('company_id', '=', company_id), ('type', '=', journal_type)]
 
             journal = None
+
+            if journal_type == 'sale':
+                domain +=[('sale_default_user_ids','=',self._uid)]
             if self._context.get('default_currency_id'):
                 currency_domain = domain + [('currency_id', '=', self._context['default_currency_id'])]
                 journal = self.env['account.journal'].search(currency_domain, limit=1)
 
             if not journal:
-                journal = self.env['account.journal'].search(domain, limit=1)
 
+                journal = self.env['account.journal'].search(domain, limit=1)
             if not journal:
                 error_msg = _('Please define an accounting miscellaneous journal in your company')
                 if journal_type == 'sale':
-                    error_msg = _('Please define an accounting sale journal in your company')
+                    error_msg = _('Please define an accounting sale journal in your user and company')
                 elif journal_type == 'purchase':
                     error_msg = _('Please define an accounting purchase journal in your company')
                 raise UserError(error_msg)
         return journal
+
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True,
+        states={'draft': [('readonly', False)]},
+        domain="[('company_id', '=', company_id)]",
+        default=lambda self: self._get_default_journal())

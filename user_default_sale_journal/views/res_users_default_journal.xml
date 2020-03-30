@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="res_users_default_sale_journal_tree" model="ir.ui.view">
+            <field name="name">res_users_default_sale_journal.tree</field>
+            <field name="model">res.users.default_sale_journal</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="default journal">
+                    <field name="user_id"/>
+                    <field domain="[('type','=','sale')]" name="journal_id"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_res_users_default_sale_journal" model="ir.actions.act_window">
+            <field name="name">Users default sale journal</field>
+            <field name="res_model">res.users.default_sale_journal</field>
+            <field name="view_mode">tree</field>
+        </record>
+        <menuitem action="action_res_users_default_sale_journal" id="res_users_default_sale_journal_menu" name="Users default sale journal" parent="account.account_invoicing_menu"/>
+    </data>
+</odoo>

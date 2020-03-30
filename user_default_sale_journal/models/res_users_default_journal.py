@@ -3,9 +3,9 @@ from odoo import api, fields, models,_
 
 from odoo.exceptions import  ValidationError
 
-class ResUsersDefaultJournal(models.Model):
-    _name = 'res.users.default_journal'
-    _description = 'Default journal by user'
+class ResUsersDefaultSaleJournal(models.Model):
+    _name = 'res.users.default_sale_journal'
+    _description = 'Default sale journal by user'
 
     user_id = fields.Many2one(
         'res.users',
@@ -27,6 +27,6 @@ class ResUsersDefaultJournal(models.Model):
     def company_constrain(self):
         if self.journal_id.company_id.id not in self.user_id.company_ids.ids :
             raise  ValidationError(_('The journal company not in user company'))
-        is_defined = self.search([('user_id','=',self.user_id.id),('company_id','=',self.company_id.id)])
+        is_defined = self.search([('id','<>',self.id),('user_id','=',self.user_id.id),('company_id','=',self.company_id.id)])
         if len(is_defined):
             raise  ValidationError(_('This user has default journal for this company'))
